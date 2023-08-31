@@ -1,7 +1,7 @@
 /*
-Version: 1.0
+Version: 1.1
 Last edited by: Natalia Pakhomova
-Last edit date: 27/08/2023
+Last edit date: 31/08/2023
 GraphQL type definitions for the Company entity.
 Defines the structure of the Company type and input type.
 */
@@ -12,41 +12,27 @@ const { gql } = require('apollo-server');
 
 // Define the Company type
 const companyType = gql`
+  # Company type definition
   type Company {
-    # Unique identifier for the company
-    id: ID!
-    # The name of the company
-    companyName: String!
-    # The description of the company
-    description: String
-    # The address of the company
-    address: String
-    # The contact email of the company
-    contactEmail: String
-    # The contact phone number of the company
-    contactPhone: String
-    # The URL of the company's logo
-    logoUrl: String
-    # The timezone of the company
-    timezone: String
+    _id: ID! # Company's unique identifier
+    companyName: String! # Company's name
+    description: String # Company's description
+    address: String # Company's address
+    contactEmail: String # Company's contact email
+    contactPhone: String # Company's contact phone
+    logoUrl: String # Company's logo URL
+    timezone: String # Company's timezone
   }
 
-  # Input type for creating or updating a Company
+  # Input type for creating or updating a company
   input CompanyInput {
-    # The name of the company (required)
-    companyName: String!
-    # The description of the company
-    description: String
-    # The address of the company
-    address: String
-    # The contact email of the company
-    contactEmail: String
-    # The contact phone number of the company
-    contactPhone: String
-    # The URL of the company's logo
-    logoUrl: String
-    # The timezone of the company
-    timezone: String
+    companyName: String! # Company's name
+    description: String # Company's description
+    address: String # Company's address
+    contactEmail: String # Company's contact email
+    contactPhone: String # Company's contact phone
+    logoUrl: String # Company's logo URL
+    timezone: String # Company's timezone
   }
 `;
 

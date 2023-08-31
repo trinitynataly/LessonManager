@@ -1,32 +1,30 @@
 /*
-Version: 1.0
+Version: 1.1
 Last edited by: Natalia Pakhomova
-Last edit date: 27/08/2023
+Last edit date: 31/08/2023
 GraphQL schema for the User entity.
 Defines the queries and mutations related to the user.
 */
 
-const { gql } = require('apollo-server'); // Import the gql function from Apollo Server
+// Import the gql function from Apollo Server
+const { gql } = require('apollo-server');
 
-// Define the GraphQL schema for the User entity
+// Define the User type and related input
 const userSchema = gql`
-  # Define the queries related to the user
-  type Query {
-    # Fetch all users
-    getAllUsers: [User]!
-    # Fetch a single user by ID
-    getUser(id: ID!): User
+  # Extend the Query type with new user-related queries
+  extend type Query {
+    getAllUsers: [User]! # Get a list of all users
+    getUser(_id: ID!): User # Get a user by ID
   }
 
-  # Define the mutations related to the user
-  type Mutation {
-    # Create a new user
-    createUser(input: UserInput!): User!
-    # Update an existing user
-    updateUser(input: UserInput!): User!
-    # Delete a user by ID
-    deleteUser(id: ID!): User!
+  # Extend the Mutation type with new user-related mutations
+  extend type Mutation {
+    createUser(input: UserInput!): User! # Create a new user
+    updateUser(_id: ID!, input: UserInput!): User! # Update an existing user
+    deleteUser(_id: ID!): User! # Delete a user
   }
 `;
 
-module.exports = userSchema; // Export the user schema
+// Export the User schema to be used in the application
+module.exports = userSchema;
+

@@ -1,20 +1,32 @@
 /*
-Version: 1.0
+Version: 1.1
 Last edited by: Natalia Pakhomova
-Last edit date: 27/08/2023
+Last edit date: 30/08/2023
 GraphQL schema configuration.
 Responsible for loading and merging type definitions and resolvers for the GraphQL schema.
 */
 
 // Import necessary modules
+const { gql } = require('apollo-server'); // Import the gql function
 const { mergeTypeDefs } = require('@graphql-tools/merge'); // Import the mergeTypeDefs function
 const { loadFilesSync } = require('@graphql-tools/load-files'); // Import the loadFilesSync function
 const path = require('path'); // Import the path module to work with file paths
 
-// Load type and schema files
+// Define the base schema using the gql tag
+const baseSchema = gql`
+  type Query {
+    _: String
+  }
+  type Mutation {
+    _: String
+  }
+`;
+
+// Load type and schema files, including the base schema
 const typeDefsArray = [
+  baseSchema, // Include the base schema directly
+  ...loadFilesSync(path.join(__dirname, "types")), // Load all type files
   ...loadFilesSync(path.join(__dirname, "schemas")), // Load all schema files
-  ...loadFilesSync(path.join(__dirname, "types")) // Load all type files
 ];
 
 // Merge type definitions

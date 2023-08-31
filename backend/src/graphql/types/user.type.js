@@ -1,7 +1,7 @@
 /*
-Version: 1.0
+Version: 1.1
 Last edited by: Natalia Pakhomova
-Last edit date: 27/08/2023
+Last edit date: 31/08/2023
 GraphQL type definitions for the User entity.
 Defines the structure of the User type and input type.
 */
@@ -10,18 +10,30 @@ const { gql } = require('apollo-server'); // Import the gql function from Apollo
 
 // Define the GraphQL type definitions for the User entity
 const userType = gql`
-  # Define the User type with its fields
+  # User type definition
   type User {
-    id: ID!           # ID of the user (automatically generated)
-    first_name: String! # First name of the user
-    last_name: String!  # Last name of the user
+    _id: ID! # User's unique identifier
+    first_name: String! # User's first name
+    last_name: String! # User's last name
+    email: String! # User's email
+    password: String! # User's password hash (encrypted)
+    company: Company # Company associated with the user
+    level: Int! # User level (0-user, 1-manager, 2-site admin)
+    registrationDate: String! # Date of user registration
+    lastAccess: String # Date of last user access
+    lastUpdate: String! # Date of last user profile update
+    status: Int! # User status (0-user inactive, 1-user active)
   }
 
-  # Define the User input type for mutations
+  # Input type for creating or updating a user
   input UserInput {
-    id: ID             # ID of the user (optional for updates)
-    first_name: String! # First name of the user
-    last_name: String!  # Last name of the user
+    first_name: String! # User's first name
+    last_name: String! # User's last name
+    email: String! # User's email
+    password: String! # User's password
+    company: ID # ID of the associated company
+    level: Int # User level
+    status: Int # User status
   }
 `;
 
