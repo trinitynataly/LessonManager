@@ -22,7 +22,14 @@ const userType = gql`
     registrationDate: String! # Date of user registration
     lastAccess: String # Date of last user access
     lastUpdate: String! # Date of last user profile update
-    status: Int! # User status (0-user inactive, 1-user active)
+    status: Int! # User status (0-user inactive, 1-user active),
+    access_token: String # User's JWT access token
+    refresh_token: String # User's JWT refresh token
+  }
+
+  # Type for the access token
+  type AccessToken {
+    access_token: String # User's JWT access token
   }
 
   # Input type for creating or updating a user
@@ -34,6 +41,12 @@ const userType = gql`
     company: ID # ID of the associated company
     level: Int # User level
     status: Int # User status
+  }
+
+  # Input type for logging in a user
+  input LoginInput {
+    email: String! # User's email
+    password: String! # User's password
   }
 `;
 

@@ -13,7 +13,7 @@ const { gql } = require('apollo-server');
 const userSchema = gql`
   # Extend the Query type with new user-related queries
   extend type Query {
-    getAllUsers: [User]! # Get a list of all users
+    getAllUsers(companyID: ID): [User]! # Get a list of all users
     getUser(_id: ID!): User # Get a user by ID
   }
 
@@ -22,6 +22,8 @@ const userSchema = gql`
     createUser(input: UserInput!): User! # Create a new user
     updateUser(_id: ID!, input: UserInput!): User! # Update an existing user
     deleteUser(_id: ID!): User! # Delete a user
+    loginUser(input: LoginInput!): User! # Login a user
+    refreshToken(refreshToken: String!): AccessToken! # Refresh a user's JWT access token
   }
 `;
 

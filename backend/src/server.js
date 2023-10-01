@@ -1,31 +1,53 @@
 /*
-Version: 1.0
+Version: 1.2
 Last edited by: Natalia Pakhomova
-Last edit date: 27/08/2023
+Last edit date: 30/09/2023
 Main file of the GraphQL backend server application.
 Responsible for setting up the Apollo Server, connecting to the database, and handling server termination.
 */
 
-// Import necessary modules
-require('dotenv').config(); // Load environment variables from a .env file
-const { ApolloServer } = require("apollo-server"); // Import ApolloServer class
-const connectDB = require('./db/connect'); // Import database connection function
+require('dotenv').config(); // Import the dotenv module and initialize it
+const { ApolloServer } = require('@apollo/server'); // Import ApolloServer class
+const { startStandaloneServer } = require('@apollo/server/standalone'); // Import the startStandaloneServer function
+const { connectDB } = require('./db/connect'); // Import database connection function
 const { typeDefs, resolvers } = require('./graphql/schema'); // Import the schema.js module
+const { authenticateUser } = require('./helpers/auth'); // Import the app private key
 
-// Create a new Apollo Server instance
-const server = new ApolloServer({ typeDefs, resolvers });
+const debug = process.env.DEBUG == 'true'; // Get the DEBUG environment variable
 
-// Connect to the database and start the server
-connectDB().then(() => {
-  // After a successful connection, start the server
-  const PORT = process.env.PORT || 3000; // Set the port number for the server
-  server.listen({ port: PORT }).then(({ url }) => {
-    console.log(`🚀 Server ready at ${url}`); // Log the server's URL when it's ready
+// Define the startServer function
+async function startServer() {
+  // Create a new Apollo Server instance
+  const server = new ApolloServer({
+    typeDefs: typeDefs, // Pass the typeDefs to the Apollo Server
+    resolvers: resolvers, // Pass the resolvers to the Apollo Server
+    // Define the formatError function to format errors - Removes stack trace in anything but development
+    formatError: (error) => {
+      const { message, extensions } = error; // Extract the error message and extensions
+      // Log the error
+      if (!debug) {
+        // In production, remove the stack trace from the error
+        delete extensions.stacktrace;
+      }
+      // Return the error message and extensions
+      return { message, extensions };
+    },
   });
-});
+  // Connect to the database
+  await connectDB();
+  // Start the server
+  const { url } = await startStandaloneServer(server, {
+    // Define the server listen port
+    listen: { port: 3000 },
+    // Define a context function to add the user to the context
+    context: async ({ req, res }) => {
+      // Return the user from the authenticateUser function
+      return authenticateUser(req);
+    },
+  });
+  // Log the server URL
+  console.log(`🚀 Server ready at ${url}`);
+}
 
-// Handle server termination gracefully
-process.on('SIGINT', () => {
-  console.log("Gracefully shutting down..."); // Log a message when the server is shutting down
-  process.exit(0); // Exit the process with a successful status code
-});
+// Call the startServer function to start the server
+startServer();

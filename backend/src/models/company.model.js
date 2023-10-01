@@ -1,7 +1,7 @@
 /*
-Version: 1.0
+Version: 1.1
 Last edited by: Natalia Pakhomova
-Last edit date: 27/08/2023
+Last edit date: 30/09/2023
 Mongoose model for the Company entity.
 Defines the schema and exports the Company model.
 */

@@ -8,9 +8,8 @@ Responsible for loading and merging type definitions and resolvers for the Graph
 
 // Import necessary modules
 const { gql } = require('apollo-server'); // Import the gql function
-const { mergeTypeDefs } = require('@graphql-tools/merge'); // Import the mergeTypeDefs function
-const { loadFilesSync } = require('@graphql-tools/load-files'); // Import the loadFilesSync function
-const path = require('path'); // Import the path module to work with file paths
+const glob = require('glob'); // Import the glob module
+const { mergeTypeDefs, mergeResolvers } = require('@graphql-tools/merge'); // Import the mergeTypeDefs and mergeResolvers functions
 
 // Define the base schema using the gql tag
 const baseSchema = gql`
@@ -22,28 +21,24 @@ const baseSchema = gql`
   }
 `;
 
+// Find all type and schema files within the current directory
+const typeNames = glob.sync('src/graphql/types/*.type.js');
+const schemaNames = glob.sync('src/graphql/schemas/*.schema.js');
+
 // Load type and schema files, including the base schema
 const typeDefsArray = [
   baseSchema, // Include the base schema directly
-  ...loadFilesSync(path.join(__dirname, "types")), // Load all type files
-  ...loadFilesSync(path.join(__dirname, "schemas")), // Load all schema files
+  ...typeNames.map((type) => require(`../../${type}`)), // Load all type definitions
+  ...schemaNames.map((schema) => require(`../../${schema}`)), // Load all schema definitions
 ];
 
-// Merge type definitions
-const typeDefs = mergeTypeDefs(typeDefsArray); // Merge all loaded type definitions
-
-// Load resolvers
-const resolversArray = loadFilesSync(path.join(__dirname, "resolvers")); // Load all resolver files
-
-// Merge resolvers
-const resolvers = resolversArray.reduce((acc, resolver) => {
-  for (let key in resolver) {
-    if (!acc[key]) {
-      acc[key] = {}; // Create an empty object for the resolver key if it doesn't exist
-    }
-    Object.assign(acc[key], resolver[key]); // Merge the resolver functions for the key
-  }
-  return acc;
-}, {});
-
-module.exports = { typeDefs, resolvers }; // Export the merged type definitions and resolvers
+// Merge all loaded type definitions
+const typeDefs = mergeTypeDefs(typeDefsArray); 
+// Find all resolver files within the current directory
+const resolverNames = glob.sync('src/graphql/resolvers/*.resolvers.js');
+// Load resolver files
+const resolversArray = resolverNames.map((resolver) => require(`../../${resolver}`));
+// Merge all loaded resolvers
+const resolvers = mergeResolvers(resolversArray); 
+// Export the merged type definitions and resolvers
+module.exports = { typeDefs, resolvers }; 
