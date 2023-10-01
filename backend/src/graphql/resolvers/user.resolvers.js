@@ -86,7 +86,7 @@ const resolvers = {
       // Check if the user is authenticated
       isAuthenticated(context);
       // Validate the input data
-      await userValidator.validateNewUser(input);
+      await UserValidator.validateNewUser(input);
       // Check if the user is authorized to create a new user in the specified company
       isAuthorized(context.user, null, input.company, true);
       // Create a new User instance with the provided input data
