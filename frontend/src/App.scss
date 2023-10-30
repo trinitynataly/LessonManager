@@ -1,0 +1,50 @@
+/*
+Version: 1.1
+Last edited by: Natalia Pakhomova
+Last edit date: 30/10/2023
+Frontend application main component.
+*/
+
+// SubmitButton Style
+.submitButton {
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+// Confirm Toast message style
+.green-toast {
+  .toast-header {
+    background-color: #28a745;
+    color: white;
+  }
+  .toast-body {
+    background-color: #d4edda;
+    color: #155724;
+  }
+}
+
+// Error Toast message style
+.red-toast {
+  .toast-header {
+    background-color: #b92245;
+    color: white;
+  }
+  .toast-body {
+    background-color: #edd4d4;
+    color: #571515;
+  }
+}
+
+// Table button control style
+.table-tools {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+}

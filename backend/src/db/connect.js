@@ -1,14 +1,23 @@
 /*
-Version: 1.1
+Version: 1.2
 Last edited by: Natalia Pakhomova
-Last edit date: 30/09/2023
+Last edit date: 14/10/2023
 Connect to MongoDB and handle database events.
 Responsible for establishing a connection to the MongoDB server and managing various connection events.
 */
 
+const config = require('config'); // Import config package
 const mongoose = require('mongoose'); // Import Mongoose library for MongoDB
 
-const MONGO_SERVER = process.env.MONGO_SERVER || 'mongodb://localhost:27017/lessonmanager'; // MongoDB server URL
+const mongoConfig = config.get('mongo'); // Get MongoDB configuration settings
+
+let mongoCredentials = ''; // Define MongoDB credentials
+if (mongoConfig.user && mongoConfig.password) { // If MongoDB credentials are defined
+  mongoCredentials = `${mongoConfig.user}:${mongoConfig.password}@`; // Set MongoDB credentials
+}
+
+// Define MongoDB server connection string
+const MONGO_SERVER = `mongodb://${mongoCredentials}${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.db_name}`;
 
 // Define the connectDB function to connect to MongoDB
 const connectDB = async () => {

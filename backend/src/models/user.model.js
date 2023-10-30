@@ -1,13 +1,13 @@
 /*
-Version: 1.1
+Version: 1.4
 Last edited by: Natalia Pakhomova
-Last edit date: 31/08/2023
+Last edit date: 30/10/2023
 Mongoose model for the User entity.
 Defines the schema and exports the User model.
 */
 
-const mongoose = require('mongoose');
-const {generateAuthTokens, refreshAuthTokens, generatePassswordHash, comparePasswordHash} = require('../helpers/auth');
+const mongoose = require('mongoose'); // Import the Mongoose library for working with MongoDB
+const {generateAuthTokens, generatePassswordHash, comparePasswordHash} = require('../helpers/auth'); // Import the auth helper functions
 
 // Define the schema for the User entity
 const userSchema = new mongoose.Schema({
@@ -93,8 +93,10 @@ userSchema.pre('save', async function(next) {
 
   // Hash the password
   try {
-    // Generate a new password hash
-    this.password = generatePassswordHash(this.password);
+     // Generate a new password hash
+     const passwordHash = await generatePassswordHash(this.password);
+     // Set the password hash
+     this.password = passwordHash; 
     // Continue
     next();
   } catch (error) { // Catch any errors

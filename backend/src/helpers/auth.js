@@ -1,10 +1,12 @@
 /*
-Version: 1.0
+Version: 1.4
 Last edited by: Natalia Pakhomova
-Last edit date: 30/09/2023
+Last edit date: 30/10/2023
 Helper functions for authentication and authorization.
 */
 
+// Import config package
+const config = require('config');
 // Import the ApolloError and AuthenticationError classes
 const { AuthenticationError, ForbiddenError } = require('apollo-server');
 // Import the jsonwebtoken and bcrypt libraries
@@ -12,8 +14,10 @@ const jwt = require('jsonwebtoken');
 // Import the bcrypt library
 const bcrypt = require('bcrypt');
 
+const securityConfig = config.get('security'); // Get security configuration settings
+
 // Load app private key from environment variables
-const appPrivateKey = process.env.APP_PRIVATE_KEY; 
+const appPrivateKey = securityConfig.app_key; 
 if (!appPrivateKey) { // Check if the private key is defined
     // If the private key is not defined, log an error and exit the process
     console.error('FATAL ERROR: APP_PRIVATE_KEY is not defined');
@@ -21,7 +25,7 @@ if (!appPrivateKey) { // Check if the private key is defined
 }
 
 // Load password pepper from environment variables
-const passwordPepper = process.env.PASSWORD_PEPPER;
+const passwordPepper = securityConfig.password_pepper;
 if (!passwordPepper) { // Check if the password pepper is defined
     // If the password pepper is not defined, log an error and exit the process
     console.error('FATAL ERROR: PASSWORD_PEPPER is not defined');
@@ -55,8 +59,12 @@ const authenticateUser = (request) => {
         const token = request.headers.authorization || '';
         // If there is no token, return null
         if (!token) return;
+        // Remove Bearer from token
+        const tokenWithoutBearer = token.split(' ')[1];
+        // If there is no token, return null
+        if (!tokenWithoutBearer) return;
         // Verify the token using the JWT and app private key
-        const user = jwt.verify(token, appPrivateKey); 
+        const user = jwt.verify(tokenWithoutBearer, appPrivateKey); 
         // Check if the user exists
         if (user) {
             // If the user exists, return the user
@@ -87,10 +95,10 @@ const generateAuthTokens = (user) => {
     return { accessToken, refreshToken };
 }
 
-const refreshAuthTokens = (refreshToken) => {
+const refreshAuthTokens = (token) => {
     try {
         // Verify the refresh token using the JWT and app private key
-        const user = jwt.verify(refreshToken, appPrivateKey); 
+        const user = jwt.verify(token, appPrivateKey); 
         // Check if the user exists
         if (!user) {
             // If the user does not exist, throw an error
@@ -102,8 +110,14 @@ const refreshAuthTokens = (refreshToken) => {
             appPrivateKey,
             { expiresIn: '10m' }  // Expires in 10 minutes
         );
+        // Generate Refresh Token
+        const refreshToken = jwt.sign(
+            { _id: user._id, email: user.email, level: user.level, company: user.company },
+            appPrivateKey,
+            { expiresIn: '7d' }  // Expires in 7 days
+        );
         // Return the access token
-        return { user, accessToken };
+        return { user, accessToken, refreshToken };
     } catch (error) {
         // If there is an error, throw an error
         throw new AuthenticationError(`Failed to decode JWT token`);
@@ -118,6 +132,23 @@ const isAuthenticated = (context) => {
         throw new AuthenticationError('User is not authenticated');
     }
 }
+
+const toStringSafe = (value) => {
+    // Check if the value is null or undefined
+    if (value == null) {
+        return null;
+    }
+    // Check if the value is already a string
+    if (typeof value === 'string') {
+        return value;
+    }
+    // If the value has a toString method (like an ObjectId), call it
+    if (typeof value.toString === 'function') {
+        return value.toString();
+    }
+    // Otherwise, return the value unchanged
+    return value;
+};
   
 // Define the isAuthorized function to check if a user is authorized to perform an action
 const isAuthorized = (user, ownerId, companyId, owner=false) => {
@@ -127,7 +158,7 @@ const isAuthorized = (user, ownerId, companyId, owner=false) => {
         return;
     }
     // Check if the user is a manager and the owner of the company
-    if (user.level === 1 && user.company === companyId) {
+    if (user.level === 1 && toStringSafe(user.company) === toStringSafe(companyId)) {
         // If the user is a manager and the owner of the company, they are authorized to perform any action
         return;
     }
@@ -136,13 +167,13 @@ const isAuthorized = (user, ownerId, companyId, owner=false) => {
         // If ownership permission is required, check if the user is the owner of the resource
         if (owner) {
             // If the user is the owner of the resource, they are authorized to perform any action
-            if (user._id === ownerId) {
+            if (toStringSafe(user._id) === toStringSafe(ownerId)) {
                 return;
             }
         // If ownership permission is not required, check if the user belongs to the company
         } else {
             // If the user belongs to the company, they are authorized to perform any action
-            if (user.company === companyId) {
+            if (toStringSafe(user.company) === toStringSafe(companyId)) {
                 return;
             }
         }

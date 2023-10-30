@@ -1,0 +1,23 @@
+/*
+Version: 1.0
+Last edited by: Natalia Pakhomova
+Last edit date: 14/10/2023
+Login layout CSS styles
+*/
+
+/* Set the entire layout to cover the full viewport and center its content */
+.login-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    background-color: #f4f4f4; /* Background color for the whole page, can adjust as needed */
+  }
+  
+  /* Style for the login card container */
+  .login-card-container {
+    width: 100%;
+    max-width: 400px; /* Max width of the login card. Adjust as necessary */
+  }
+  

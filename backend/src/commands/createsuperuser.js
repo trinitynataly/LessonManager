@@ -40,9 +40,7 @@ const createUserAndCompany = async (first_name, last_name, email, password, comp
             console.log('User already exists');
         } else { // If the user does not exist
             // Generate a password hash
-            const hashedPassword = await generatePassswordHash(password);
-            // Create a new user
-            const user = new User({ email, first_name, last_name, password: hashedPassword, company: company._id, level: 2, status: 1 });
+            const user = new User({ email, first_name, last_name, password: password, company: company._id, level: 2, status: 1 });
             // Save the new user
             await user.save();
             // Log a success message

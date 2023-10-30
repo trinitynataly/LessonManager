@@ -1,0 +1,6 @@
+{
+    "security": {
+        "app_key": "APP_PRIVATE_KEY",
+        "password_pepper" : "PASSWORD_PEPPER"
+    }
+}

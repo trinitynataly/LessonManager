@@ -1,7 +1,7 @@
 /*
-Version: 1.1
+Version: 1.2
 Last edited by: Natalia Pakhomova
-Last edit date: 31/08/2023
+Last edit date: 28/10/2023
 GraphQL schema for the User entity.
 Defines the queries and mutations related to the user.
 */
@@ -23,7 +23,9 @@ const userSchema = gql`
     updateUser(_id: ID!, input: UserInput!): User! # Update an existing user
     deleteUser(_id: ID!): User! # Delete a user
     loginUser(input: LoginInput!): User! # Login a user
-    refreshToken(refreshToken: String!): AccessToken! # Refresh a user's JWT access token
+    registerUser(input: RegisterInput!): User! # Register a new user and company
+    refreshToken(token: String!): AccessToken! # Refresh a user's JWT access token
+    changeUserPassword(input: UpdatePasswordInput!): Response! # Change a user's password
   }
 `;
 

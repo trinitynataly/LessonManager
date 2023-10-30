@@ -115,7 +115,7 @@ const resolvers = {
       // If the user is not a super admin, they can only update users of their company
       if (context.user.level < 2) {
         // Check if user is trying to change the company
-        if (input.company != user.company) {
+        if (input.company && input.company != user.company) {
           // Throw an error if the user is trying to change the company
           throw new ForbiddenError(`You have no permission to change company for this user`);
         }
@@ -133,7 +133,7 @@ const resolvers = {
       return await User.findById(_id).select('-password');
     },
     // Resolver for deleting a user
-    deleteUser: async (_, { _id }) => {
+    deleteUser: async (_, { _id }, context) => {
       // Check if the user is authenticated
       isAuthenticated(context);
         // Find the user by ID
@@ -185,10 +185,61 @@ const resolvers = {
       // Return the user data
       return userData;
     },
+    changeUserPassword: async (_, { input }, context) => {
+      // Check if the user is authenticated
+      isAuthenticated(context);
+      // Validate the input data
+      await UserValidator.validateChangePassword(input);
+      // get current user from db
+      const user = await User.findOne({ _id: context.user._id, status: 1 });
+      // If the user doesn't exist, throw an error
+      if (!user) {
+        throw new ApolloError(`This account does not exists or is disabled`, 'LOGIN_USER_ERROR');
+      }
+      // Check if the old password is correct for this user
+      const isPasswordCorrect = await user.comparePassword(input.current_password);
+      // If the password is incorrect, throw an error
+      if (!isPasswordCorrect) {
+        // Throw an error if the password is incorrect
+        throw new ApolloError(`Your current password is incorrect`, 'CHANGE_PASSWORD_ERROR');
+      }
+      // Update the user's password with the new password
+      user.password = input.new_password;
+      // Save the updated user to trigger the pre-save middleware
+      await user.save();
+      // Return true
+      return { message: 'Password updated successfully' };
+    },
+    registerUser: async (_, { input }) => {
+      // Validate the input data
+      await UserValidator.validateRegisterUser(input);
+      // Create new company with supplied company Name
+
+      const company = new Company({ companyName: input.companyName });
+      // Save the new company to the database
+      await company.save();
+      // Create a new User instance with the provided input data, including the company ID, make him an admin and active
+      input.company = company._id;
+      input.level = 1;
+      input.status = 1;
+      const user = new User(input);
+      // Save the new user to the database
+      await user.save();
+      // Generate an auth token for the user
+      const { accessToken, refreshToken } = user.generateAuthTokens();
+      // Pick only the necessary user data and add the auth token
+      const { password, ...userData } = user.toObject();
+      // Add the access token to the user data
+      userData.access_token = accessToken;
+      // Add the refresh token to the user data
+      userData.refresh_token = refreshToken;
+      // Return the user data
+      return userData;
+    },
     // Resolver for refreshing a user's auth token
-    refreshToken: async (_, { refreshToken }) => {
+    refreshToken: async (_, { token }) => {
       // Refresh the user's auth token
-      const { user, accessToken } = refreshAuthTokens(refreshToken);
+      const { user, accessToken, refreshToken } = refreshAuthTokens(token);
       // check if user still active in DB
       const userInDB = await User.findById(user._id);
       // If the user doesn't exist or is inactive, throw an error
@@ -196,7 +247,7 @@ const resolvers = {
         throw new ApolloError(`Refresh token is invalid or expired`, 'LOGIN_USER_ERROR');
       }
       // Return the new access token
-      return { access_token: accessToken };
+      return { access_token: accessToken, refresh_token: refreshToken };
     },
   },
 };

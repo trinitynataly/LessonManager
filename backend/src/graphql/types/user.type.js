@@ -1,7 +1,7 @@
 /*
-Version: 1.1
+Version: 1.3
 Last edited by: Natalia Pakhomova
-Last edit date: 31/08/2023
+Last edit date: 30/10/2023
 GraphQL type definitions for the User entity.
 Defines the structure of the User type and input type.
 */
@@ -30,6 +30,12 @@ const userType = gql`
   # Type for the access token
   type AccessToken {
     access_token: String # User's JWT access token
+    refresh_token: String # User's JWT refresh token
+  }
+
+  # Type for generic response
+  type Response {
+    message: String # Response message
   }
 
   # Input type for creating or updating a user
@@ -37,7 +43,7 @@ const userType = gql`
     first_name: String! # User's first name
     last_name: String! # User's last name
     email: String! # User's email
-    password: String! # User's password
+    password: String # User's password
     company: ID # ID of the associated company
     level: Int # User level
     status: Int # User status
@@ -47,6 +53,21 @@ const userType = gql`
   input LoginInput {
     email: String! # User's email
     password: String! # User's password
+  }
+
+  # Input type for new user and company registration
+  input RegisterInput {
+    first_name: String! # User's first name
+    last_name: String! # User's last name
+    email: String! # User's email
+    password: String! # User's password
+    companyName: String! # Company name
+  }
+
+  # Input type for updating a user's password
+  input UpdatePasswordInput {
+    current_password: String! # User's current password
+    new_password: String! # User's new password
   }
 `;
 

@@ -1,0 +1,18 @@
+{
+    "server": {
+        "port": 4000,
+        "debug" : true
+
+    },
+    "mongo": {
+        "host": "localhost",
+        "port": 27017,
+        "db_name": "lessonmanager",
+        "user": null,
+        "password": null
+    },
+    "security": {
+      "app_key": "process.env.APP_PRIVATE_KEY",
+      "password_pepper" : "process.env.PASSWORD_PEPPER"
+    }
+}

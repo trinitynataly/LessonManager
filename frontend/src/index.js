@@ -1,13 +1,25 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+/*
+Version: 1.3
+Last edited by: Natalia Pakhomova
+Last edit date: 14/10/2023
+Frontend application entry point.
+*/
 
+import React from 'react'; // Import React
+import ReactDOM from 'react-dom/client'; // Import ReactDOM
+import App from './App'; // Import the App component
+import reportWebVitals from './reportWebVitals'; // Import the reportWebVitals function
+import StoreProvider from './Store'; // Import the StoreProvider component
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+
+// Init the app
 const root = ReactDOM.createRoot(document.getElementById('root'));
+// Render the app
 root.render(
   <React.StrictMode>
-    <App />
+      <StoreProvider>
+        <App />
+      </StoreProvider>
   </React.StrictMode>
 );
 
