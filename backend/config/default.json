@@ -2,7 +2,6 @@
     "server": {
         "port": 4000,
         "debug" : true
-
     },
     "mongo": {
         "host": "localhost",

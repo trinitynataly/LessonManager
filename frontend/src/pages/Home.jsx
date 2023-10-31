@@ -2,10 +2,10 @@
 Version: 1.0
 Last edited by: Natalia Pakhomova
 Last edit date: 14/10/2023
-Home page
+Main layout
 */
 
-// Home Component
+
 const Home = () => {
     return (
         <div>
@@ -14,5 +14,4 @@ const Home = () => {
     );
 }
 
-// Export the Home component
 export default Home;

@@ -207,7 +207,7 @@ function Users() {
     }
   }
 
-  // Create the onSubmit function
+  // Create the onSubmit function to submit user data
   const onSubmit = async (data, event) => {
     // Prevent the default form submit event
     event.preventDefault();
@@ -221,7 +221,7 @@ function Users() {
       level,
       status,
     };
-    // Only include the password field in userInput if it's not empty
+    // Only include the password field in userInput if it's not empty or the user is new
     if (password || !editingUserId) {
       userInput.password = password;
     }
