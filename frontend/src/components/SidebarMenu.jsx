@@ -1,7 +1,7 @@
 /*
-Version: 1.0
+Version: 1.1
 Last edited by: Natalia Pakhomova
-Last edit date: 25/10/2023
+Last edit date: 18/03/2024
 Sidebar component for react-pro-sidebar
 */
 
@@ -88,8 +88,7 @@ const SidebarMenu = () => {
             Lesson Manager
           </MenuItem>
           {/* Render the menu items */}
-          <SidebarMenuItem title="Home" to="/" icon={<FaHome/>} /> {/* Link to home */}
-          <SidebarMenuItem title="Appointments" to="/appointments" icon={<FaCalendarAlt/>} /> {/* Link to appointments */}
+          <SidebarMenuItem title="Appointments" to="/" icon={<FaCalendarAlt/>} /> {/* Link to appointments */}
           <SidebarMenuItem title="Clients" to="/clients" icon={<FaUsers/>} /> {/* Link to clients */}
           <SubMenu label="Settings" icon={<FaCog/>} open={isSettingsOpened} onOpenChange={() => {setIsSettingsOpened(!isSettingsOpened)}}> {/* Settings submenu */}
             <SidebarMenuItem title="Profile" to="/settings/profile" /> {/* Link to profile */}

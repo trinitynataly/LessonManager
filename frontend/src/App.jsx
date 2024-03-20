@@ -1,8 +1,8 @@
 /*
-Version: 1.1
+Version: 1.2
 Last edited by: Natalia Pakhomova
-Last edit date: 30/10/2023
-Frontend application main component.
+Last edit date: 15/03/2024
+Updated the navigation to make appointment page default
 */
 
 import { useContext } from 'react'; // import the useContext hook from React
@@ -10,7 +10,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'; // im
 import MainLayout from './layouts/Main'; // import the MainLayout component
 import LoginLayout from './layouts/Login'; // import the LoginLayout component
 import ErrorLayout from './layouts/Error'; // import the ErrorLayout component
-import Home from './pages/Home'; // import the Home Page component
 import Appointments from './pages/Appointments'; // import the Appointments Page component
 import Clients from './pages/Clients'; // import the Clients Page component
 import Profile from './pages/settings/Profile'; // import the Settings Page component
@@ -59,10 +58,8 @@ function App() {
             <Routes>
               {/* Load main layout */}
               <Route path="/" element={<MainLayout />}>
-                {/* Load home page */}
-                <Route index element={<ProtectedRoute component={Home} />} />
                 {/* Load appointments page */}
-                <Route path="appointments" element={<ProtectedRoute component={Appointments} />} />
+                <Route index element={<ProtectedRoute component={Appointments} />} />
                 {/* Load clients page */}
                 <Route path="clients" element={<ProtectedRoute component={Clients} />} />
                 {/* Settings URL should reditect to profile */}

@@ -1,13 +1,14 @@
 /*
-Version: 1.2
+Version: 1.3
 Last edited by: Natalia Pakhomova
-Last edit date: 28/10/2023
+Last edit date: 06/03/2024
 Frontend application global variables and data storage.
 */
 
-import {useState, createContext} from 'react'; // Import the useState and createContext hooks from React
+import {useState, createContext } from 'react'; // Import the useState and createContext hooks from React
 import { getUserFromSessionStorage, removeTokenfromSessionStorage, saveTokenToSessionStorage } from './helpers/auth'; // Import the auth helpers  
 import PropTypes from 'prop-types'; // Import PropTypes
+
 
 export const StoreContext = createContext(null); // Create the StoreContext
 

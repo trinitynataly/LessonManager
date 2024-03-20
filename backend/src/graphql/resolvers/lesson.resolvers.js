@@ -1,14 +1,13 @@
 /*
-Version: 1.1
+Version: 1.3
 Last edited by: Natalia Pakhomova
-Last edit date: 30/10/2023
-Resolvers for lesson GraphQL operations.
-Contains resolvers for querying, creating, updating, and deleting lessons.
+Last edit date: 05/03/2024
+Implementing the lesson resolvers for fetching, creating, updating, and deleting lessons via GraphQL queries and mutations.
 */
 
 const { ApolloError } = require('apollo-server'); // Import the ApolloError and ForbiddenError classes
 const { Client, User, Lesson } = require('../../models'); // Import the Client, User, and Lesson models
-const { LessonValidators } = require('../../validators'); // Import the lesson validators
+const { LessonValidator } = require('../../validators'); // Import the lesson validators
 const { isAuthenticated, isAuthorized } = require('../../helpers/auth'); // Import the auth helpers
 
 // Define the resolvers for lesson-related queries and mutations
@@ -41,11 +40,12 @@ const resolvers = {
     },
     Query: {
         // Resolver for fetching all lessons for a user and a given date range (optional)
-        getUserLessons: async (_, { user, start, end }, context) => {
+        getUserLessons: async (_, { user="", start="", end="" }, context) => {
             // Check if the client is authenticated
             isAuthenticated(context);
-            // Fetch the companyID and level from the authenticated client
+            // Fetch the user ID from the authenticated client
             const userID = context.user._id;
+            // Fetch the user level from the authenticated client
             const userLevel = context.user.level;
             // Define the filter based on the client's level
             let filter = {};
@@ -53,26 +53,31 @@ const resolvers = {
             if (userLevel === 2) {
                 // If user ID is specified, check if it exists
                 if (user) {
-                    // Check if the user exists in the database
+                    // Fetch the user by ID from the database
                     const user = await User.findById(user);
-                    // If the user doesn't exist, throw an error
+                    // Check if the user exists
                     if (!user) {
+                        // If the user doesn't exist, throw an error
                         throw new ApolloError(`User with id ${user} does not exist.`, 'GET_USER_ERROR');
                     }
                 }
-                // If user ID is specified, use it as a filter, otherwise use the client's company ID
-                filter.user = user? user : userCompanyID;
+                // If user ID is specified, use it as a filter, otherwise show appointments from all users in the same company ID
+                if (user) {
+                    filter.user = user;
+                } else {
+                    filter.company = context.user.company;
+                }
             } else {
                 // If the client is not a super admin, they can only list lessons of their company
                 filter.user = userID;
             }
             // If start date is specified, add it to the filter
             if (start) {
-                filter.start = { $gte: start };
+                filter.start = { $gte: start }; // Greater than or equal to the start date
             }
             // If end date is specified, add it to the filter
             if (end) {
-                filter.start = { $lte: end };
+                filter.start = { $lt: end }; // Less than the end date
             }
             // Fetch lessons based on the defined filter
             const lessons = await Lesson.find(filter)
@@ -85,6 +90,7 @@ const resolvers = {
             isAuthenticated(context);
             // Fetch the companyID and level from the authenticated client
             const userCompanyID = context.user.company;
+            // Fetch the user level from the authenticated client
             const userLevel = context.user.level;
             // Define the filter based on the client's level
             if (!client) {
@@ -105,7 +111,7 @@ const resolvers = {
             }
             // If end date is specified, add it to the filter
             if (end) {
-                filter.start = { $lte: end };
+                filter.start = { $lt: end };
             }
             // Fetch lessons based on the defined filter
             const lessons = await Lesson.find(filter)
@@ -134,7 +140,7 @@ const resolvers = {
             // Check if the client is authenticated
             isAuthenticated(context);
             // Validate the lesson input
-            LessonValidators.validateLesson(input);
+            await LessonValidator.validateLesson(input);       
             // Check if client exists
             const client = await Client.findById(input.client);
             if (!client) {
@@ -152,7 +158,7 @@ const resolvers = {
             // Check if the client is authenticated
             isAuthenticated(context);
             // Validate the lesson input
-            LessonValidators.validateLesson(input);
+            await LessonValidator.validateLesson(input);
             // Fetch the existing lesson from the database
             // Check if client exists
             const client = await Client.findById(input.client);
@@ -168,9 +174,11 @@ const resolvers = {
                 throw new ApolloError(`Lesson with id ${_id} does not exist`, 'GET_LESSON_ERROR');
             }
             // Check if the user is authorized to update the lesson
-            isAuthorized(context.user, null, lesson.client.company._id, false);
+            isAuthorized(context.user, null, client.company._id, false);
             // Update the lesson in the database
-            await lesson.update(input);
+            Object.assign(lesson, input);
+            // Save the updated lesson
+            await lesson.save();
             // Return the updated lesson
             return lesson;
         },
@@ -182,12 +190,20 @@ const resolvers = {
             const lesson = await Lesson.findById(_id);
             // If the lesson doesn't exist, throw an error
             if (!lesson) {
-                throw new ApolloError(`Lesson with id ${_id} does not exist`, 'GET_LESSON_ERROR');
+                throw new ApolloError(`Appointment with id ${_id} does not exist`, 'GET_LESSON_ERROR');
+            }
+            // Check if client exists
+            const client = await Client.findById(lesson.client);
+            if (!client) {
+                throw new ApolloError(`Client with id ${input.client} does not exist`, 'GET_CLIENT_ERROR');
             }
             // Check if the user is authorized to delete the lesson
-            isAuthorized(context.user, null, lesson.client.company._id, false);
+            isAuthorized(context.user, null, client.company._id, false);
             // Delete the lesson from the database
-            await lesson.delete();
+            const deltedLesson = await Lesson.findByIdAndRemove(_id);
+            if (!deltedLesson) {
+                throw new ApolloError(`Appointment with id ${_id} does not exist`, 'GET_CLIENT_ERROR');
+            }
             // Return the deleted lesson
             return lesson;
         },

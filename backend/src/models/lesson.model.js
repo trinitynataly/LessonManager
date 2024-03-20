@@ -1,7 +1,7 @@
 /*
-Version: 1.3
+Version: 1.4
 Last edited by: Natalia Pakhomova
-Last edit date: 30/10/2023
+Last edit date: 05/03/2024
 Mongoose model for the Lesson entity.
 Defines the schema and exports the Lesson model.
 */
@@ -41,6 +41,23 @@ const lessonSchema = new mongoose.Schema({
     max: 120,
     default: 60,
     required: true,
+  },
+  lessonType: {
+    type: String,
+    enum: ['lesson', 'training', 'meeting', 'event', 'other'],
+    default: 'lesson',
+    required: true,
+  },
+  importance: {
+    type: Number,
+    min: 0,
+    max: 5,
+    default: 0,
+  },
+  mood: {
+    type: String,
+    enum: ['happy', 'sad', 'interested', 'tired', 'frustrated', 'angry', 'surprised', 'confident', 'nervous', 'indifferent', 'neutral'],
+    default: 'neutral',
   },
 }, { timestamps: true });
 

@@ -1,3 +1,10 @@
+/*
+Version: 1.0
+Last edited by: Natalia Pakhomova
+Last edit date: 05/03/2024
+AuthLink plugin for Apollo Client
+*/
+
 import { setContext } from '@apollo/client/link/context'; // Import the setContext function
 import jwtDecode from 'jwt-decode'; // Import the jwtDecode function
 import { refreshTokens } from './helpers/refreshTokens'; // Import the refreshTokens function
@@ -52,12 +59,14 @@ const authLink = setContext(async (operation, { headers }) => {
             }
         }
     }
+    // Return the headers with the authorization token
     return {
         headers: {
-            ...headers,
-            authorization: token ? `Bearer ${token}` : "",
+            ...headers, // Spread the existing headers
+            authorization: token ? `Bearer ${token}` : "", // Set the authorization header with the token
         }
     };
 });
 
+// Export the authLink function
 export default authLink;

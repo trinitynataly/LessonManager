@@ -1,7 +1,7 @@
 /*
 Version: 1.1
 Last edited by: Natalia Pakhomova
-Last edit date: 30/10/2023
+Last edit date: 15/02/2024
 Apollo Client initialisation.
 */
 
@@ -31,7 +31,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = new HttpLink({ // Create a new HTTP link
-    uri: process.env.API_URL || "http://localhost:4000/graphql", // Set the URI to the GraphQL API endpoint
+    uri: import.meta.env.VITE_API_URL || "http://localhost:4000/graphql", // Set the URI to the GraphQL API endpoint
   });
    
 export const client = new ApolloClient({ // Create a new Apollo Client instance

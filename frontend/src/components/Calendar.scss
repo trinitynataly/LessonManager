@@ -1,0 +1,229 @@
+/*
+Version: 1.0
+Last edited by: Natalia Pakhomova
+Last edit date: 14/10/2023
+Calendar component CSS styles
+ */
+
+// Set the entire layout to cover the full viewport and center its content
+.fc-col-header-cell-cushion {
+    color: #ffffff;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+        color: #ffffff;
+        text-decoration: underline;
+        font-weight: 700;
+    }
+}
+
+
+.fc-timegrid-event-harness:hover {
+    z-index: 100 !important ;
+}
+
+.fc-daygrid-event {
+    white-space: normal;
+}
+
+
+.fc-col-header-cell {
+    padding: 20px;
+}
+
+.fc-event {
+    padding: 0px;
+    margin: auto;
+    max-width: 96%;
+    background-color: transparent;
+    border: 0 none;
+    color: var(--fc-event-text-color);
+    &:hover {
+        background-color: transparent;
+        border: 0 none;
+        z-index: 100;
+    }
+    &:focus {
+        background-color: transparent;
+        border: 0 none;
+        box-shadow: none;
+        &:after {
+            background-color: transparent;
+        }
+    }
+}
+
+.fc-col-header-cell {
+    background-color: #ffffff !important;
+}
+
+.fc-scrollgrid {
+    background-color: #ffffff ;
+}
+
+.event-time, .event-title {
+    display: inline-block;
+    margin-right: 5px; /* Adjust this as needed */
+}
+
+.fc-daygrid-day:hover, .fc-timegrid-slot:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.event-content {
+    display: block;
+    width: 100%;
+    padding: 2px 5px 0 5px;
+    border-radius: 3px;
+    min-height: 38px;
+    z-index: 0;
+    .event-score {
+        display: flex;
+        flex-direction: row;
+        align-self: flex-start;
+        gap: 6px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        font-size: 75%;
+    }
+    .event-info {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+    }
+    .event-info-full {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-width: 400px;
+        min-height: 38px;
+        border-radius: 3px;
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        z-index: 100;
+        padding: 5px;
+        .event-toolbar {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            flex-direction: row;
+            gap: 3px;
+            align-items: center;
+        }
+    }
+    &:hover {
+        position: relative;
+        .event-info, .event-score {
+            display: none;
+        }
+        .event-info-full {
+            display: block;
+        }
+    }
+}
+
+.fc th {
+    background-color: #0F7D80 !important;
+}
+
+.fc-event-type-lesson {
+    .event-content {
+        background-color: #0F7D80;
+        border-color: #0B686A;
+        .event-info-full {
+            background-color: #095d60;
+            border-color: #064748;
+        }
+    }
+}
+
+.fc-event-type-training {
+    .event-content {
+        background-color: #62ca21;
+        border-color: #62ca21;
+        .event-info-full {
+            background-color: #62ca21;
+            border-color: #62ca21;
+        }
+    }
+}
+
+.fc-event-type-meeting {
+    .event-content {
+        background-color: #ff9500;
+        border-color: #ff9900;
+        .event-info-full {
+            background-color: #ff9500;
+            border-color: #ff9500;
+        }
+    }
+}
+
+.fc-event-type-event {
+    .event-content {
+        background-color: #9000ff;
+        border-color: #9000ff;
+        .event-info-full {
+            background-color: #9000ff;
+            border-color: #9000ff;
+        }
+    }
+}
+
+.fc-event-type-other {
+    .event-content {
+        background-color: #0ccdd7;
+        border-color: #0ccdd7;
+        .event-info-full {
+            background-color: #0ccdd7;
+            border-color: #0ccdd7;
+        }
+    }
+}
+
+.edit-btn {
+    color: #ffffff !important; // Set the default text color as needed
+    border-color: white !important; // Set default border color to match background or as needed
+    padding-top: 3px !important;
+    padding-bottom: 6px !important;
+
+    &:hover {
+        color: #ffffff !important; // Set the hover text color as needed
+        background-color: #d4d4d4 !important; // Set the hover background color as needed
+        border-color: #d4d4d4 !important; // Set the hover border color as needed
+    }
+}
+
+.delete-btn {
+    color: #ffffff !important; // Set the default text color as needed
+    border-color: white !important; // Set default border color to match background or as needed
+    padding-top: 3px !important;
+    padding-bottom: 6px !important;
+
+    &:hover {
+        color: #ffffff !important; // Set the hover text color as needed
+        background-color: #ff0000 !important; // Set the hover background color as needed
+        border-color: #ff0000 !important; // Set the hover border color as needed
+    }
+}
+
+.btn-primary {
+    background: linear-gradient(180deg, rgba(15,125,128,1) 0%, rgba(45,199,204,1) 100%) !important;
+    border-color: #2DC7CC !important;
+   
+
+    &:hover {
+        background: linear-gradient(180deg, rgba(45,199,204,1) 0%, rgba(15,125,128,1) 100%) !important;
+        border-color: #2DC7CC !important;
+    }
+}

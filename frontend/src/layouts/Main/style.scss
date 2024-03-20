@@ -4,20 +4,134 @@ Last edited by: Natalia Pakhomova
 Last edit date: 14/10/2023
 Main layout
 */
-
-
-// Page background color
-.page {
-    background-color: #F2F2F2;
+ 
+[data-bs-theme="dark"] {
+    --bs-body-bg: #1e2c3c !important;
 }
 
-// Header background color
-.header {
-    background-color: #FFFFFF;
+.theme-select {
+    a.selected {
+        background-color: #bac4cd;
+    }
 }
 
-// Footer background color
-.footer {
-    background-color: #ddd;
+// Define base variables for light and dark themes
+:root {
+    // Light theme colors
+    --background-color-light: #fff;
+    --text-color-light: #2c3e50;
+    --header-bg-light: #f8f9fa;
+    --border-color-light: #ddd;
+
+    // Dark theme colors
+    --background-color-dark: #1e2c3c;
+    --text-color-dark: #fff;
+    --header-bg-dark: #2c3e50;
+    --border-color-dark: #2c3e50;
 }
 
+// Default theme (light)
+body {
+    background-color: var(--background-color-light);
+    color: var(--text-color-light);
+
+    .header {
+        background-color: var(--header-bg-light);
+        border-color: var(--border-color-light);
+    }
+    .fc-scrollgrid {
+        background-color: var(--bs-body-bg);
+    }
+    .fc-daygrid-day-number {
+        color: var(--text-color);
+    }
+    
+}
+#root .ps-sidebar-root {
+    border-width: 0;
+}
+
+// Dark theme overrides
+body.theme-dark-mode {
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
+
+    .header {
+        background-color: var(--header-bg-dark);
+        border-color: var(--border-color-dark);
+    }
+    .modeIcon {
+        background-color: #2c3e50 !important; // Or any dark color you prefer
+        border-color: white !important; // Makes the border white in dark mode
+
+        &:hover {
+            background-color: #2DC7CC !important; // Or any color you want for hover
+            border-color: white !important; // Keeps the border white when hovering in dark mode
+        }
+    }
+    .navbar-brand {
+        color: white !important; // Set the text color for the brand in dark mode
+
+        &:hover {
+            color: white !important; // Set the hover text color for the brand in dark mode
+        }
+    }
+    .modal-content {
+        background-color: #2c3e50; // Set the background color for the modal in dark mode
+        color: white; // Set the text color for the modal in dark mode
+    }
+
+    div.react-datepicker__input-container > input.form-control {
+        color: var(--bs-body-color) !important;
+    }
+}
+
+// Additional styles for selected items in the theme dropdown
+.selected {
+    background-color: #2DC7CC !important;
+    color: white;
+
+    &:hover {
+        background-color: #2DC7CC !important;
+        color: white !important;
+    }
+
+    &:active {
+        background-color: #2DC7CC !important;
+        color: white !important;
+    }
+
+    &:target {
+        background-color: #2DC7CC !important;
+        color: white !important;
+    }
+
+}
+
+.dropdown-item:focus-visible {
+    background-color: #2DC7CC !important;
+}
+
+.dropdown-item:focus-within {
+    background-color: #2DC7CC !important;
+}
+
+.dropdown-item:hover {
+    background-color: #2DC7CC !important;
+    color: var(--bs-dropdown-link-color) !important;
+}
+
+.modeIcon {
+    background-color: #2c3e50 !important;
+    border-color: #2c3e50 !important;
+
+    &:hover {
+        background-color: #2DC7CC !important;
+        border-color: #2DC7CC !important;
+    }
+}
+
+
+.theme-select {
+    padding-left: 20px;
+}

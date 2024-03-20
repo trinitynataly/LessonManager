@@ -17,7 +17,7 @@ const MainLayout = () => {
   return (
     <>
       {/* Create main flex div */ }
-      <div style={{ display: "flex", height: "100vh" }}>
+      <div style={{ display: "flex", minHeight: "100vh", alignItems: "stretch" }}>
         {/* SidebarMenu component */}
         <SidebarMenu />
         {/* Create full-width container */}

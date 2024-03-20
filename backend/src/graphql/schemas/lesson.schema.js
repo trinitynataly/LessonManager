@@ -1,9 +1,8 @@
 /*
 Version: 1.1
 Last edited by: Natalia Pakhomova
-Last edit date: 30/10/2023
-GraphQL schema for the Lesson entity.
-Defines the queries and mutations related to the lesson.
+Last edit date: 20/02/2024
+Defines the lesson query and mutation schema for GraphQL API.
 */
 
 // Import the gql function from Apollo Server
@@ -14,7 +13,7 @@ const lessonSchema = gql`
     # Extend the Query type with new lesson-related queries
     extend type Query {
         # Get list of all lessons for a user and a given date range (optional)
-        getUserLessons(user: ID!, start: String, end: String): [Lesson]!
+        getUserLessons(user: ID, start: String, end: String): [Lesson]!
         # Get list of all lessons for a client and a given date range (optional)
         getClientLessons(client: ID!, start: String, end: String): [Lesson]!
         # Get a lesson by ID

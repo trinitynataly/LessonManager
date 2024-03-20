@@ -1,7 +1,7 @@
 /*
-Version: 1.1
+Version: 1.2
 Last edited by: Natalia Pakhomova
-Last edit date: 30/10/2023
+Last edit date: 5/03/2024
 GraphQL type definitions for the Lesson entity.
 Defines the structure of the Lesson type and input type.
 */
@@ -19,6 +19,9 @@ const lessonType = gql`
         user: User! # User associated with the lesson
         start: String! # Lesson start date and time
         duration: Int! # Lesson duration in minutes
+        lessonType: String! # Lesson type
+        importance: Int # Lesson importance
+        mood: String # Lesson mood
     }
 
     # Input type for creating or updating a lesson
@@ -29,6 +32,9 @@ const lessonType = gql`
         user: ID! # ID of the associated user
         start: String! # Lesson start date and time
         duration: Int! # Lesson duration in minutes
+        lessonType: String! # Lesson type
+        importance: Int # Lesson importance
+        mood: String # Lesson mood
     }
 `;
 

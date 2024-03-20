@@ -8,6 +8,7 @@ Footer component
 import { Row, Col, Navbar } from 'react-bootstrap'; // Importing elements from react bootstrap
 
 const Footer = () => { // Footer component
+  const currentYear = new Date().getFullYear();
   return (
     <>
       {/* Footer row */}
@@ -17,7 +18,7 @@ const Footer = () => { // Footer component
               {/* Footer text */}
               <Navbar>
                   {/* Copyright Message */}
-                  <Navbar.Text>&copy; 2023 Natalia Pakhomova</Navbar.Text>
+                  <Navbar.Text>&copy; 2023-{currentYear} Natalia Pakhomova</Navbar.Text>
               </Navbar>
           </Col>
       </Row>

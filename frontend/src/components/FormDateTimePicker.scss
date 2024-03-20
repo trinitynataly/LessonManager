@@ -1,0 +1,21 @@
+/*
+Version: 1.0
+Last edited by: Natalia Pakhomova
+Last edit date: 14/10/2023
+FormDateTimePicker component for react forms
+*/
+
+.react-datepicker__input-container {
+    width: 100%;
+}
+.react-datepicker-wrapper {
+    width: 100%;
+}
+
+div.react-datepicker__input-container > input.form-control {
+    font-size: 1.1rem;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    color: #212529;
+    font-weight: 500;
+}

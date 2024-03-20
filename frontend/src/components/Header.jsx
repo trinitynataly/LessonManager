@@ -6,44 +6,84 @@ Header component
 */
 
 import { useContext } from 'react'; // Import useContext hook
-import { Row, Col, Navbar } from 'react-bootstrap'; // Importing elements from react bootstrap
-import { FaBars, FaUser } from 'react-icons/fa'; // Importing icons from react icons
+import { Row, Col, Navbar, Dropdown } from 'react-bootstrap'; // Importing additional Dropdown from react-bootstrap
+import { FaBars, FaUser, FaAdjust, FaMoon, FaSun } from 'react-icons/fa'; // Importing FaAdjust for the theme icon
 import { StoreContext } from '../Store'; // Import StoreContext from Store
+import { useTheme } from '../Theme'; // Import useTheme from Theme
+import './../layouts/Main/style.scss'; // Import styles.css file from Main folder
 
 // Header component
 const Header = () => {
-    // Destructure user, isMenuCollapsed, setIsMenuCollapsed, setIsMenuToggled from StoreContext
+    // Destructure context values used in the component
     const { user, isMenuCollapsed, setIsMenuCollapsed, setIsMenuToggled } = useContext(StoreContext);
+    const { themeMode, setThemeMode } = useTheme();
+
+    // Function to handle theme change
+    const changeThemeMode = (newMode) => {
+        setThemeMode(newMode); // Update the theme mode in the context
+        // Here you might want to add additional logic depending on how your theme is applied
+    };
+
+    // Function to get the theme icon based on the theme mode
+    const GetIcon = () => {
+        // Return the theme icon based on the theme mode
+        switch (themeMode) {
+            case 'default': // OS Default theme
+                return <FaAdjust size={20} />;
+            case 'light': // Light theme
+                return <FaSun size={20} />;
+            case 'dark': // Dark theme
+                return <FaMoon size={20} />;
+            default: // Default theme
+                return <FaAdjust size={20} />;
+        }
+    }
+
+    
     // Return the Header component
     return (
         <>
-            {/* Header row */}
+            {/* Render the header */}
             <Row className="header">
-                {/* Header column */}
+                {/* Render the Navbar */}
                 <Col>
-                    {/* Header navigation */}
+                    {/* Render the Navbar */}
                     <Navbar>
-                        {/* Navbar.Brand component from react-bootstrap collapse menu on desktop */}
-                        <Navbar.Brand href="#" onClick={() => {setIsMenuCollapsed(!isMenuCollapsed)}} className="d-none d-md-block">
-                            {/* Conditionally render the menu icon */}
+                        {/* Render the Navbar.Brand and the Navbar.Toggle */}
+                        <Navbar.Brand href="#" onClick={() => setIsMenuCollapsed(!isMenuCollapsed)} className="d-none d-md-block">
+                            {/* Render the menu icon */}
                             <FaBars size={20} />
                         </Navbar.Brand>
-                        {/* Navbar.Brand component from react-bootstrap toggle menu on mobile */}
-                        <Navbar.Brand href="#" onClick={() => {setIsMenuToggled(true)}} className="d-md-none">
-                            {/* Conditionally render the menu icon */}
+                        {/* Render the Navbar.Brand and the Navbar.Toggle */}
+                        <Navbar.Brand href="#" onClick={() => setIsMenuToggled(true)} className="d-md-none">
+                            {/* Render the menu icon */}
                             <FaBars size={24} />
                         </Navbar.Brand>
-                        {/* column for user infomation */}
-                        <div style={{marginLeft:'auto'}}>
-                            {/* User block */}
-                            <div style={{display: 'flex', alignItems: 'center'}}>
-                                {/* User icon */}
-                                <div style={{borderRadius: '50%', overflow: 'hidden', marginRight: '0.5rem'}}>
+                        {/* Render the user icon and the theme dropdown */}
+                        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+                            {/* Render the user icon */}
+                            <div style={{ display: 'flex', alignItems: 'center', marginLeft: '1rem' }}>
+                                {/* Render the user icon */}
+                                <div style={{ borderRadius: '50%', overflow: 'hidden', marginRight: '0.5rem' }}>
                                     <FaUser size={20} />
                                 </div>
-                                {/* User name */}
+                                {/* Render the user name and greeting */}
                                 Hello, {user && user.first_name}
                             </div>
+                            {/* Render the theme dropdown */}
+                            <Dropdown align="end" className="theme-select">
+                                {/* Render the current theme icon and the theme dropdown */}
+                                <Dropdown.Toggle variant="secondary" id="theme-dropdown" className="modeIcon d-flex align-items-center">
+                                    <GetIcon /><span style={{ marginLeft: '10px' }}>Theme</span> {/* Theme icon selected dynamically */}
+                                </Dropdown.Toggle>
+                                {/* Render the theme dropdown menu */}
+                                <Dropdown.Menu>
+                                    {/* Render the theme options */}
+                                    <Dropdown.Item onClick={() => changeThemeMode('default')} className={`${themeMode === 'default' ? 'selected' : ''} d-flex align-items-center`}><FaAdjust size={14} /><span style={{ marginLeft: '10px' }}>OS Default</span></Dropdown.Item>
+                                    <Dropdown.Item onClick={() => changeThemeMode('light')} className={`${themeMode === 'light' ? 'selected' : ''} d-flex align-items-center`}><FaSun size={14} /><span style={{ marginLeft: '10px' }}>Light</span></Dropdown.Item>
+                                    <Dropdown.Item onClick={() => changeThemeMode('dark')} className={`${themeMode === 'dark' ? 'selected' : ''} d-flex align-items-center`}><FaMoon size={14} /><span style={{ marginLeft: '10px' }}>Dark</span></Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
                         </div>
                     </Navbar>
                 </Col>
